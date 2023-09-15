@@ -361,7 +361,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
         bottomOffsetRef.current
       )
     },
-    [composerHeight],
+    [composerHeight, getKeyboardHeight, getBasicMessagesContainerHeight],
   )
 
   /**
@@ -411,6 +411,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
     },
     [
       handleTextInputFocusWhenKeyboardShow,
+      getMessagesContainerHeightWithKeyboard,
       isKeyboardInternallyHandled,
       keyboardHeightRef,
       bottomOffsetRef,
@@ -516,6 +517,12 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
     )
   }
 
+  const notifyInputTextReset = useCallback(() => {
+    if (onInputTextChanged) {
+      onInputTextChanged('')
+    }
+  }, [onInputTextChanged])
+
   const resetInputToolbar = useCallback(() => {
     if (textInputRef.current) {
       textInputRef.current.clear()
@@ -535,6 +542,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
     getMessagesContainerHeightWithKeyboard,
     textInputRef,
     getTextFromProp,
+    notifyInputTextReset,
   ])
 
   const _onSend = useCallback(
@@ -579,7 +587,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
       setComposerHeight(newComposerHeight)
       setMessagesContainerHeight(newMessagesContainerHeight)
     },
-    [maxComposerHeight, minComposerHeight],
+    [maxComposerHeight, minComposerHeight, getMessagesContainerHeightWithKeyboard],
   )
 
   const _onInputTextChanged = useCallback((_text: string) => {
@@ -594,12 +602,6 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
     // Only set state if it's not being overridden by a prop.
     if (text === undefined) {
       setTextState(_text)
-    }
-  }, [])
-
-  const notifyInputTextReset = useCallback(() => {
-    if (onInputTextChanged) {
-      onInputTextChanged('')
     }
   }, [onInputTextChanged])
 
@@ -624,7 +626,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
       setComposerHeight(minComposerHeight)
       setMessagesContainerHeight(newMessagesContainerHeight)
     },
-    [initialText, minComposerHeight, maxHeightRef, notifyInputTextReset],
+    [initialText, minComposerHeight, maxHeightRef, notifyInputTextReset, getMessagesContainerHeightWithKeyboard],
   )
 
   const onMainViewLayout = useCallback(
@@ -701,7 +703,7 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
       actionSheet: actionSheet || (() => actionSheetRef.current?.getContext()!),
       getLocale: () => locale,
     }),
-    [actionSheet, locale],
+    [actionSheet, locale, actionSheetRef],
   )
 
   if (isInitialized === true) {

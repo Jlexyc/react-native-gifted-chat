@@ -1,7 +1,7 @@
 {
-  "name": "react-native-gifted-chat",
-  "version": "2.5.0",
-  "description": "The most complete chat UI for React Native",
+  "name": "react-native-gifted-chat-do-not-use",
+  "version": "2.5.1",
+  "description": "The most complete chat UI for React Native. Do not use this fork",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": {
